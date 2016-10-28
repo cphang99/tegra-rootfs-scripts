@@ -40,7 +40,7 @@ run_in_qemu /usr/bin/apt-get -y install $ubuntu_packages
 # Install it independently and forcibly to avoid this. 
 if ! run_in_qemu /usr/bin/dpkg-query -l libudev-dev |grep '^ii' >/dev/null; then 
     run_in_qemu /usr/bin/apt-get download libudev-dev 
-    run_in_qemu /usr/bin/dpkg --force-depends -i $(basename $SYSROOT/libudev-dev*.deb) 
+    run_in_qemu /usr/bin/dpkg --force-depends -i $(basename $SYSROOT/home/libudev-dev*.deb) 
     rm -f $SYSROOT/libudev-dev*.deb 
     status "You might have to run 'apt-get -f install' to fix packages dependencies on the next boot" 
 fi 
