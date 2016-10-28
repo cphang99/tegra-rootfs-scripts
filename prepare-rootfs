@@ -52,7 +52,7 @@ status "Setting back root as owner of target FS"
 status "Setting current user as owner of /boot, /lib/modules and /lib/firmware"
 sudo -s -- <<EOF
 chown -R root:root $SYSROOT/*
-chown -R 1000:1000 $SYSROOT/home/alarm
+chown -R 1000:1000 $SYSROOT/home/ubuntu
 chown -R $USER $SYSROOT/$NV_PREFIX $SYSROOT/boot $SYSROOT/lib/modules $SYSROOT/lib/firmware
 EOF
 
