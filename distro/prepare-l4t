@@ -1,49 +1,49 @@
-ARCH_PACKAGES="
-glproto
-dri2proto
-dri3proto
-presentproto
-libxext
-libxcb
-libxdamage
-libxfixes
-libxshmfence
-libxcursor
-libxkbcommon-x11
-libjpeg-turbo
-libinput
-libdrm
-cairo
-mtdev
-wayland
-wayland-protocols
-xcmiscproto
-xtrans
-bigreqsproto
-randrproto
-inputproto
-videoproto
-compositeproto
-recordproto
-scrnsaverproto
-resourceproto
-xf86driproto
-xineramaproto
-xcb-util-keysyms
-xorg-xinit
-xorg-fonts
-xorg-fonts-misc
-xorg-xsetroot
-terminus-font
-ttf-dejavu
-noto-fonts
-xterm
-mesa-demos
-libepoxy
-"
-
-status "Using qemu to install required packages on target FS..."
-run_in_qemu /usr/bin/apt-get install -y $ARCH_PACKAGES
+ubuntu_packages=" 
+symlinks 
+libpthread-stubs0-dev 
+libffi-dev 
+libexpat1-dev 
+x11proto-gl-dev 
+x11proto-dri2-dev 
+x11proto-dri3-dev 
+x11proto-present-dev 
+libx11-dev 
+libxext-dev 
+libxdamage-dev 
+libxfixes-dev 
+libx11-xcb-dev 
+libxcb-dri2-0-dev 
+libxcb-dri3-dev 
+libxcb-present-dev 
+libxcb-sync-dev 
+libxcb-glx0-dev 
+libxshmfence-dev 
+libxxf86vm-dev 
+libmtdev-dev 
+libxcb-composite0-dev 
+libxcursor-dev 
+libcairo2-dev 
+libxkbcommon-dev 
+libjpeg-dev 
+libpam0g-dev 
+libwayland-dev 
+libdbus-1-dev 
+libpixman-1-dev 
+libsystemd-login-dev 
+libevdev-dev 
+" 
+ 
+status "Using qemu to install required packages on target FS..." 
+run_in_qemu /usr/bin/apt-get update 
+run_in_qemu /usr/bin/apt-get -y install $ubuntu_packages 
+# Installing libudev-dev might upgrade udev, which will fail because upstart is not running. 
+# Install it independently and forcibly to avoid this. 
+if ! run_in_qemu /usr/bin/dpkg-query -l libudev-dev |grep '^ii' >/dev/null; then 
+    run_in_qemu /usr/bin/apt-get download libudev-dev 
+    run_in_qemu /usr/bin/dpkg --force-depends -i $(basename $SYSROOT/libudev-dev*.deb) 
+    rm -f $SYSROOT/libudev-dev*.deb 
+    status "You might have to run 'apt-get -f install' to fix packages dependencies on the next boot" 
+fi 
 
 status "Fixing symlinks in target FS' /usr/lib/..."
 LINKS=$(find $SYSROOT/usr/lib -type l -not -path "*/usr/lib/modules/*")
