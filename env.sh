@@ -80,27 +80,20 @@ NPROC=$(nproc)
 BUILDROOT=$TOP/out/build/$ARCH/$DISTRO
 
 #### toolchain-specific settings
-LINARO_GCC_VERSION=4.8
-LINARO_GCC_RELEASE=15.06
-case $ARCH in
-	arm)
-	LINARO_GCC_VARIANT=arm-linux-gnueabihf
-	;;
-	aarch64)
-	LINARO_GCC_VARIANT=aarch64-linux-gnu
-	;;
-esac
-LINARO_GCC_PACKAGE=gcc-linaro-${LINARO_GCC_VERSION}-2015.06-x86_64_${LINARO_GCC_VARIANT}
-CROSS_COMPILE=${LINARO_GCC_VARIANT}-
 
+CROSS_COMPILE=arm-linux-gnueabihf
 SYSTEM_PATH="$PATH"
-PATH="$TOP/out/host/$LINARO_GCC_PACKAGE/bin:$PATH"
+
 ####
 
 #### user-space only flags!
 export SYSROOT="$TOP/out/target/$ARCH/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
-export CXXFLAGS="$CFLAGS"
+export HEADERS_VER=$(basename /usr/include/c++/*)
+
+#explicitly setting header paths required due to malformed paths when using SYSROOT
+#http://stackoverflow.com/questions/26089563/proper-way-to-include-c-system-headers-when-using-g-arm-linux-gnueabi
+export CXXFLAGS="$CFLAGS -I ${SYSROOT}/usr/include/c++/${HEADERS_VER} -I ${SYSROOT}/usr/include/${CROSS_COMPILE}/c++/${HEADERS_VER}"
 
 export ACLOCAL_PATH="${SYSROOT}/usr/share/aclocal"
 export PKG_CONFIG_DIR=
