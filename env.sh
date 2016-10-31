@@ -89,7 +89,7 @@ SYSTEM_PATH="$PATH"
 #### user-space only flags!
 export SYSROOT="$TOP/out/target/$ARCH/$DISTRO"
 export CFLAGS="--sysroot=$SYSROOT"
-export HEADERS_VER=$(basename /usr/include/c++/*)
+export HEADERS_VER=$(basename ${SYSROOT}/usr/include/c++/*)
 
 #explicitly setting header paths required due to malformed paths when using SYSROOT
 #http://stackoverflow.com/questions/26089563/proper-way-to-include-c-system-headers-when-using-g-arm-linux-gnueabi
