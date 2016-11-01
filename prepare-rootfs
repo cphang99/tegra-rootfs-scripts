@@ -16,7 +16,7 @@ if [ ! -e $SYSROOT ]; then
 fi
 
 status "Setting current user as owner of target FS..."
-sudo chown -R $USER $SYSROOT/*
+sudo chmod -R +w $SYSROOT/*
 ######## ROOTFS OWNED BY USER
 
 . scripts/distro/prepare-$DISTRO
@@ -51,9 +51,9 @@ EOF
 status "Setting back root as owner of target FS"
 status "Setting current user as owner of /boot, /lib/modules and /lib/firmware"
 sudo -s -- <<EOF
-chown -R root:root $SYSROOT/*
+chmod -R -w $SYSROOT/*
 chown -R 1000:1000 $SYSROOT/home/ubuntu
-chown -R $USER $SYSROOT/$NV_PREFIX $SYSROOT/boot $SYSROOT/lib/modules $SYSROOT/lib/firmware
+chmod -R -w $SYSROOT/$NV_PREFIX $SYSROOT/boot $SYSROOT/lib/modules $SYSROOT/lib/firmware
 EOF
 
 status "Target FS ready to compile the open graphics stack!"
